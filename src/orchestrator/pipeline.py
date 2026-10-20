@@ -525,52 +525,76 @@ class BatchPipeline:
             skeleton=skeleton_ref,
         )
 
-        # Anti-MOSS collision re-routing loop (ré-aiguillage)
+        # Anti-collision and Anti-AI tell iterative loop (auto-audit & auto-correction)
         reroute_count = 0
-        while audit_report.flagged_pairs and reroute_count < self.max_reroute_iterations:
+        while not audit_report.passed and reroute_count < self.max_reroute_iterations:
             reroute_count += 1
-            colliding_students = sorted(list({pair["student_b"] for pair in audit_report.flagged_pairs}))
 
-            for idx, s_name in enumerate(colliding_students):
-                curr_deliv = deliverables[s_name]
-                template_idx = (
-                    reroute_count * len(colliding_students) + idx + 3
-                ) % len(DivergenceMatrix.BASE_STRATEGY_TEMPLATES)
-                alt_template = DivergenceMatrix.BASE_STRATEGY_TEMPLATES[template_idx]
+            # 1. Auto-clean style violations (AI tells in report and code comments)
+            if audit_report.style_violations:
+                for s_name in list(audit_report.style_violations.keys()):
+                    if s_name in deliverables:
+                        deliv = deliverables[s_name]
+                        if deliv.report_markdown:
+                            deliv.report_markdown = self.humanizer_cleaner.clean_text(deliv.report_markdown)
+                            deliv.report_markdown = deliv.report_markdown.replace("\u2014", "-")
+                        cleaned_files = {}
+                        for fname, code_content in (deliv.code_files or {}).items():
+                            c = re.sub(r"\b0\.00\b", "0", code_content)
+                            c = c.replace("\u2014", "-")
+                            lines = []
+                            for line in c.splitlines():
+                                if line.strip().startswith(("#", "//")):
+                                    lines.append(self.humanizer_cleaner.clean_text(line))
+                                else:
+                                    lines.append(line)
+                            cleaned_files[fname] = "\n".join(lines)
+                        deliv.code_files = cleaned_files
 
-                alt_directive = StrategyDirective(
-                    student_name=s_name,
-                    primary_paradigm=alt_template["primary_paradigm"],
-                    loop_style=alt_template["loop_style"],
-                    memory_style=alt_template["memory_style"],
-                    modularity=alt_template["modularity"],
-                    naming_convention=alt_template["naming_convention"],
-                    error_handling=alt_template["error_handling"],
-                    comment_density=alt_template["comment_density"],
-                )
-                alt_directive.generate_prompt_instructions()
+            # 2. Re-route colliding students
+            if audit_report.flagged_pairs:
+                colliding_students = sorted(list({pair["student_b"] for pair in audit_report.flagged_pairs}))
 
-                rerouted_deliv = self._generate_student_branch(
-                    student_name=s_name,
-                    core_solution=core_solution,
-                    profile=curr_deliv.profile or StudentProfile(name=s_name),
-                    directive=alt_directive,
-                    subject_text=subject_text,
-                    skeleton_data=skeleton_data,
-                    matiere_id=detected_matiere_id,
-                    is_reroute=True,
-                )
+                for idx, s_name in enumerate(colliding_students):
+                    curr_deliv = deliverables[s_name]
+                    template_idx = (
+                        reroute_count * len(colliding_students) + idx + 3
+                    ) % len(DivergenceMatrix.BASE_STRATEGY_TEMPLATES)
+                    alt_template = DivergenceMatrix.BASE_STRATEGY_TEMPLATES[template_idx]
 
-                if self.build_executor is not None:
-                    rerouted_deliv = self._validate_and_build(
-                        deliverable=rerouted_deliv,
+                    alt_directive = StrategyDirective(
+                        student_name=s_name,
+                        primary_paradigm=alt_template["primary_paradigm"],
+                        loop_style=alt_template["loop_style"],
+                        memory_style=alt_template["memory_style"],
+                        modularity=alt_template["modularity"],
+                        naming_convention=alt_template["naming_convention"],
+                        error_handling=alt_template["error_handling"],
+                        comment_density=alt_template["comment_density"],
+                    )
+                    alt_directive.generate_prompt_instructions()
+
+                    rerouted_deliv = self._generate_student_branch(
+                        student_name=s_name,
                         core_solution=core_solution,
+                        profile=curr_deliv.profile or StudentProfile(name=s_name),
+                        directive=alt_directive,
                         subject_text=subject_text,
                         skeleton_data=skeleton_data,
                         matiere_id=detected_matiere_id,
+                        is_reroute=True,
                     )
 
-                deliverables[s_name] = rerouted_deliv
+                    if self.build_executor is not None:
+                        rerouted_deliv = self._validate_and_build(
+                            deliverable=rerouted_deliv,
+                            core_solution=core_solution,
+                            subject_text=subject_text,
+                            skeleton_data=skeleton_data,
+                            matiere_id=detected_matiere_id,
+                        )
+
+                    deliverables[s_name] = rerouted_deliv
 
             audit_report = self.audit_loop.audit_deliverables(
                 deliverables=deliverables,

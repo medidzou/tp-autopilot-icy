@@ -160,20 +160,80 @@ class AuditLoop:
                     "status": "FLAGGED",
                 })
 
-        # 3. Style & Residual AI Tells Audit
+        # 3. Style & Residual AI Tells Audit (scans report AND code comments)
         ai_tell_patterns = [
             re.compile(p, re.IGNORECASE) for p in self.humanizer_cleaner.FR_AI_TELLS
         ]
 
+        ai_format_patterns = [
+            (re.compile(r"\u2014"), "Tiret cadratin (—) typique LLM"),
+            (re.compile(r"\b0\.00\b"), "Formatage decimal force 0.00"),
+        ]
+
         for name, deliv in deliverables.items():
-            report_text = deliv.report_markdown or ""
             violations: List[str] = []
+            texts_to_check = [deliv.report_markdown or ""]
+            for fname, content in (deliv.code_files or {}).items():
+                texts_to_check.append(content)
+
+            combined_text = "\n".join(texts_to_check)
+
             for pat in ai_tell_patterns:
-                match = pat.search(report_text)
+                match = pat.search(combined_text)
                 if match:
                     violations.append(match.group(0).strip())
+
+            for fpat, desc in ai_format_patterns:
+                if fpat.search(combined_text):
+                    violations.append(desc)
+
             if violations:
                 style_violations[name] = violations
+
+        # 3.5 Cross-student verbatim comment duplication check
+        base_comment_lines: Set[str] = set()
+        if base_code:
+            for b in (base_code if isinstance(base_code, list) else [base_code]):
+                for bline in b.splitlines():
+                    base_comment_lines.add(bline.strip())
+
+        student_names_list = list(deliverables.keys())
+        for i in range(len(student_names_list)):
+            for j in range(i + 1, len(student_names_list)):
+                s1, s2 = student_names_list[i], student_names_list[j]
+                c1_lines: Set[str] = set()
+                c2_lines: Set[str] = set()
+                for code in (deliverables[s1].code_files or {}).values():
+                    for line in code.splitlines():
+                        sline = line.strip()
+                        if (
+                            sline.startswith(("#", "//"))
+                            and len(sline) > 30
+                            and sline not in base_comment_lines
+                            and not sline.startswith(("# ===", "# ---", "#!", "# Exercice", "# -", "# ----"))
+                        ):
+                            c1_lines.add(sline)
+                for code in (deliverables[s2].code_files or {}).values():
+                    for line in code.splitlines():
+                        sline = line.strip()
+                        if (
+                            sline.startswith(("#", "//"))
+                            and len(sline) > 30
+                            and sline not in base_comment_lines
+                            and not sline.startswith(("# ===", "# ---", "#!", "# Exercice", "# -", "# ----"))
+                        ):
+                            c2_lines.add(sline)
+                shared_comments = c1_lines & c2_lines
+                if shared_comments:
+                    flagged_pairs.append({
+                        "student_a": s1,
+                        "student_b": s2,
+                        "similarity": 1.0,
+                        "threshold": threshold,
+                        "status": "COMMENT_DUPLICATION",
+                        "shared_count": len(shared_comments),
+                        "examples": list(shared_comments)[:3],
+                    })
 
         # 4. Multi-Model / Independent Adversarial Evaluation
         scientific_coherence_ok = True
