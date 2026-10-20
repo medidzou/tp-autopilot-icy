@@ -1,21 +1,8 @@
 {
   "name": "Aymen",
-  "calibration_answers": {
-    "style_code": "camelCase",
-    "gestion_erreurs": "contrôles défensifs stricts",
-    "explication_concept": "Validation rigoureuse des préconditions et postconditions avec invariants."
-  },
-  "samples": [
-    "if (bufferSize <= 0) return INVALID_ARGUMENT;\nmemset(buffer, 0, bufferSize);"
-  ],
-  "verbosity_metrics": {
-    "sample_count": 1,
-    "total_words": 21,
-    "total_sentences": 1,
-    "avg_sentence_length": 21.0,
-    "vocabulary_size": 19,
-    "lexical_diversity": 0.905
-  },
+  "calibration_answers": {},
+  "samples": [],
+  "verbosity_metrics": {},
   "style_preferences": {},
   "created_at": "2026-10-20T08:18:29.980621+00:00",
   "updated_at": "2026-10-20T08:18:29.980621+00:00"

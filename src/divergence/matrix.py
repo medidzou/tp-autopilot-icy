@@ -39,16 +39,10 @@ class StrategyDirective(BaseModel):
             else ""
         )
         instructions = (
-            f"### DIRECTIVE DE RÉDACTION NATURELLE (Profil: {self.student_name})\n"
-            f"- **Approche globale :** {self.primary_paradigm}.\n"
-            f"- **Logique & Syntaxe :** La solution algorithmique et la logique de l'exercice restent identiques et naturelles (la syntaxe standard est acceptée, sans acrobaties artificielles).\n"
-            f"- **Structure de boucle suggérée :** Boucles `{self.loop_style}` idiomatiques.\n"
-            f"- **Accès aux données :** Style standard `{self.memory_style}`.\n"
-            f"- **Découpage modulaire :** Style `{self.modularity}` (inline direct ou petites fonctions statiques auxiliaires).\n"
-            f"- **Nommage des variables :** Convention `{self.naming_convention}` pour les identifiants locaux.\n"
-            f"- **Gestion des erreurs :** Mode `{self.error_handling}`.\n"
-            f"- **Densité des commentaires :** Style `{self.comment_density}`.{forbidden_clause}\n"
-            f"- **Règle d'or :** Conserver rigoureusement les prototypes imposés par le sujet sans altérer la signature."
+            f"### CONSIGNES DE RÉSOLUTION (Étudiant: {self.student_name})\n"
+            f"- Résoudre le sujet de TP de façon claire, propre et directe pour un élève-ingénieur.\n"
+            f"- Respecter rigoureusement les prototypes et signatures de fonctions imposés par le sujet.\n"
+            f"- Code fonctionnel, sans warning de compilation et sans fuite mémoire.{forbidden_clause}"
         )
         self.prompt_instructions = instructions
         return instructions

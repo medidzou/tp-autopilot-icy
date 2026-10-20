@@ -1,21 +1,8 @@
 {
   "name": "Malo",
-  "calibration_answers": {
-    "style_code": "snake_case",
-    "gestion_erreurs": "propagation des codes d'erreur",
-    "explication_concept": "Programmation concurrente avec threads POSIX, mutex et sections critiques."
-  },
-  "samples": [
-    "pthread_mutex_lock(&lock);\nshared_counter++;\npthread_mutex_unlock(&lock);"
-  ],
-  "verbosity_metrics": {
-    "sample_count": 1,
-    "total_words": 20,
-    "total_sentences": 1,
-    "avg_sentence_length": 20.0,
-    "vocabulary_size": 19,
-    "lexical_diversity": 0.95
-  },
+  "calibration_answers": {},
+  "samples": [],
+  "verbosity_metrics": {},
   "style_preferences": {},
   "created_at": "2026-10-20T08:18:29.979641+00:00",
   "updated_at": "2026-10-20T08:18:29.979641+00:00"

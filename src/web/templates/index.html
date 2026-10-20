@@ -221,12 +221,12 @@
     let selectedFile = null;
 
     const defaultStudents = [
-      { name: "Noah", style: "snake_case • Modulaire • Pointers & malloc", binomeGroup: 1 },
-      { name: "Mehdi", style: "camelCase • Compact • Assertions", binomeGroup: 1 },
-      { name: "Malo", style: "Architecture systèmes • pthread • Verbeux", binomeGroup: 2 },
-      { name: "Aymen", style: "camelCase • Défensif • Validation rigoureuse", binomeGroup: 2 },
-      { name: "Rayyan", style: "K&R • Direct • Optimisation", binomeGroup: 3 },
-      { name: "Taha", style: "Clean code • Typage strict • Précision", binomeGroup: 3 },
+      { name: "Noah", binomeGroup: 1 },
+      { name: "Mehdi", binomeGroup: 1 },
+      { name: "Malo", binomeGroup: 2 },
+      { name: "Aymen", binomeGroup: 2 },
+      { name: "Rayyan", binomeGroup: 3 },
+      { name: "Taha", binomeGroup: 3 },
     ];
 
     const stepBadgeColors = {
@@ -284,21 +284,15 @@
                   <span>${student.name}</span>
                   ${binomeLabel}
                 </h3>
-                <p class="text-[11px] text-slate-400 mt-0.5">${student.style}</p>
               </div>
               <span id="badge-${student.name}" class="text-[11px] px-2.5 py-1 rounded-full border ${badgeClass}">
                 ${step}
               </span>
             </div>
-            ${statusData.burstiness_score ? `
-              <div class="mt-2 text-[10px] text-slate-400">
-                Score Burstiness : <span class="text-blue-400 font-mono">${statusData.burstiness_score.toFixed(2)}</span>
-              </div>
-            ` : ''}
           </div>
 
           <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-[10px] text-slate-500">${isReady ? 'Archive .ZIP générée' : 'En attente du pipeline'}</span>
+            <span class="text-[10px] text-slate-500">${isReady ? 'Archive .ZIP prête' : 'En attente'}</span>
             <button 
               id="dl-btn-${student.name}"
               class="px-2.5 py-1 text-xs rounded-lg border transition-all flex items-center space-x-1 ${isReady ? 'bg-blue-600 hover:bg-blue-500 text-white border-blue-500 cursor-pointer shadow-sm' : 'bg-slate-800/50 text-slate-600 border-slate-700/50 cursor-not-allowed'}"

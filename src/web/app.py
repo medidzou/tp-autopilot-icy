@@ -40,62 +40,14 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 BATCH_STORE: Dict[str, Dict[str, Any]] = {}
 _store_lock = threading.Lock()
 
-# Default cohort of 6 students if profiles directory is unpopulated
+# Default cohort of 6 students
 DEFAULT_COHORT = [
-    {
-        "name": "Noah",
-        "calibration_answers": {
-            "style_code": "snake_case",
-            "gestion_erreurs": "valeurs de retour et perror",
-            "explication_concept": "Allocation dynamique sur le tas avec malloc et free pour éviter les fuites.",
-        },
-        "samples": ["int res = process_buffer(buf);\nif (res < 0) { perror(\"err\"); return -1; }"],
-    },
-    {
-        "name": "Mehdi",
-        "calibration_answers": {
-            "style_code": "camelCase",
-            "gestion_erreurs": "assert() et exceptions strictes",
-            "explication_concept": "Modularité et programmation orientée objet avec encapsulation.",
-        },
-        "samples": ["assert(ptr != NULL);\nint currentIdx = computeOffset(size);"],
-    },
-    {
-        "name": "Malo",
-        "calibration_answers": {
-            "style_code": "snake_case",
-            "gestion_erreurs": "propagation des codes d'erreur",
-            "explication_concept": "Programmation concurrente avec threads POSIX, mutex et sections critiques.",
-        },
-        "samples": ["pthread_mutex_lock(&lock);\nshared_counter++;\npthread_mutex_unlock(&lock);"],
-    },
-    {
-        "name": "Aymen",
-        "calibration_answers": {
-            "style_code": "camelCase",
-            "gestion_erreurs": "contrôles défensifs stricts",
-            "explication_concept": "Validation rigoureuse des préconditions et postconditions avec invariants.",
-        },
-        "samples": ["if (bufferSize <= 0) return INVALID_ARGUMENT;\nmemset(buffer, 0, bufferSize);"],
-    },
-    {
-        "name": "Rayyan",
-        "calibration_answers": {
-            "style_code": "K&R",
-            "gestion_erreurs": "errno et retours négatifs",
-            "explication_concept": "Optimisation bas niveau, arithmétique des pointeurs et tables de hachage.",
-        },
-        "samples": ["char *p = str;\nwhile (*p) { hash = (hash << 5) + *p++; }"],
-    },
-    {
-        "name": "Taha",
-        "calibration_answers": {
-            "style_code": "clean_code",
-            "gestion_erreurs": "assertions et typage fort",
-            "explication_concept": "Conception logicielle propre, typage fort et modularité des interfaces.",
-        },
-        "samples": ["size_t elementCount = countElements(list);\nreturn elementCount > 0;"],
-    },
+    {"name": "Noah", "calibration_answers": {}, "samples": []},
+    {"name": "Mehdi", "calibration_answers": {}, "samples": []},
+    {"name": "Malo", "calibration_answers": {}, "samples": []},
+    {"name": "Aymen", "calibration_answers": {}, "samples": []},
+    {"name": "Rayyan", "calibration_answers": {}, "samples": []},
+    {"name": "Taha", "calibration_answers": {}, "samples": []},
 ]
 
 

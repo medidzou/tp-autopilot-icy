@@ -1,21 +1,8 @@
 {
   "name": "Rayyan",
-  "calibration_answers": {
-    "style_code": "K&R",
-    "gestion_erreurs": "errno et retours négatifs",
-    "explication_concept": "Optimisation bas niveau, arithmétique des pointeurs et tables de hachage."
-  },
-  "samples": [
-    "char *p = str;\nwhile (*p) { hash = (hash << 5) + *p++; }"
-  ],
-  "verbosity_metrics": {
-    "sample_count": 1,
-    "total_words": 25,
-    "total_sentences": 1,
-    "avg_sentence_length": 25.0,
-    "vocabulary_size": 21,
-    "lexical_diversity": 0.84
-  },
+  "calibration_answers": {},
+  "samples": [],
+  "verbosity_metrics": {},
   "style_preferences": {},
   "created_at": "2026-10-20T08:18:29.981768+00:00",
   "updated_at": "2026-10-20T08:18:29.981768+00:00"
