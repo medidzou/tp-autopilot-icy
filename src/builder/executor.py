@@ -450,11 +450,23 @@ class BuildExecutor:
             out_name = binary_name or "test_bin"
             build_cmd = [compiler] + flags + ["-o", out_name] + [str(f.relative_to(proj_path)) for f in c_files]
         else:
+            # Non-compiled deliverables (SQL, Bash/Shell, Web, Data, Notebooks, Documents)
+            other_files = [f for f in proj_path.rglob("*") if f.is_file() and not f.name.startswith(".")]
+            if other_files:
+                return BuildResult(
+                    success=True,
+                    exit_code=0,
+                    stdout=f"Projet sans compilation binaire validé ({len(other_files)} fichier(s) prêt(s)).",
+                    stderr="",
+                    warnings_count=0,
+                    errors_count=0,
+                    project_dir=str(proj_path),
+                )
             return BuildResult(
                 success=False,
                 exit_code=-1,
                 stdout="",
-                stderr=f"No Makefile or source files (.c, .java, .py) found in {proj_path}",
+                stderr=f"No Makefile or source files found in {proj_path}",
                 project_dir=str(proj_path),
             )
 

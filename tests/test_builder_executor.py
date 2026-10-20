@@ -417,3 +417,17 @@ def test_recursive_source_globbing_in_src_directory(tmp_path):
     assert "Recursive globbing successful" in result.execution_result.stdout
 
 
+def test_interpreted_and_script_projects_build_success(tmp_path):
+    """SQL, Bash, Web, and data deliverables compile/validate successfully without binary compilation."""
+    executor = BuildExecutor()
+    (tmp_path / "queries.sql").write_text("SELECT id, name FROM students WHERE grade >= 10;\n")
+    (tmp_path / "deploy.sh").write_text("#!/bin/bash\necho 'Starting server'\n")
+    (tmp_path / "index.html").write_text("<!DOCTYPE html><html><body><h1>TP Web</h1></body></html>\n")
+
+    result = executor.build_and_test(str(tmp_path), matiere_id="bdd")
+    assert result.success is True
+    assert result.errors_count == 0
+    assert "sans compilation binaire" in result.stdout
+
+
+
