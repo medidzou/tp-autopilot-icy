@@ -28,6 +28,7 @@ class StrategyDirective(BaseModel):
     naming_convention: str  # "snake_case", "camelCase", "short_single_letter", "descriptive_verbose"
     error_handling: str  # "early_return", "single_exit", "nested_guard", "assert_guard"
     comment_density: str  # "minimalist", "dense_technical", "docstring_only", "step_by_step"
+    redaction_angle: str = "explication claire et directe"
     forbidden_patterns: List[str] = Field(default_factory=list)
     prompt_instructions: str = ""
 
@@ -39,10 +40,16 @@ class StrategyDirective(BaseModel):
             else ""
         )
         instructions = (
-            f"### CONSIGNES DE RÉSOLUTION (Étudiant: {self.student_name})\n"
-            f"- Résoudre le sujet de TP de façon claire, propre et directe pour un élève-ingénieur.\n"
-            f"- Respecter rigoureusement les prototypes et signatures de fonctions imposés par le sujet.\n"
-            f"- Code fonctionnel, sans warning de compilation et sans fuite mémoire.{forbidden_clause}"
+            f"### CONSIGNES DE RÉSOLUTION & PERSONNALISATION DE RÉDACTION (Étudiant: {self.student_name})\n"
+            f"- **Code source :** Résoudre le sujet avec un code standard, propre, fonctionnel et sans warning.\n"
+            f"- **Respect des prototypes :** Conserver rigoureusement les signatures de fonctions imposées par le sujet.\n"
+            f"- **Personnalisation de la rédaction & justifications :**\n"
+            f"  * Pour toutes les questions textuelles de l'énoncé, les justifications de choix d'algorithmes et le compte-rendu (RAPPORT.md) :\n"
+            f"    Rédiger avec une formulation 100% unique et propre à {self.student_name}.\n"
+            f"  * Si des commentaires explicatifs sont demandés dans le code par le sujet, les formuler avec les mots de {self.student_name} sans copier les autres.\n"
+            f"  * Angle d'explication privilégié : {self.redaction_angle}.\n"
+            f"  * Aucune phrase ni justification ne doit être identique à celle d'un autre membre du groupe."
+            f"{forbidden_clause}"
         )
         self.prompt_instructions = instructions
         return instructions
@@ -51,7 +58,7 @@ class StrategyDirective(BaseModel):
 class DivergenceMatrix:
     """Manages the allocation of orthogonal strategies across students."""
 
-    # 6 foundational strategy templates using standard, natural syntax
+    # 6 foundational strategy templates focusing on individual writing and explanation angles
     BASE_STRATEGY_TEMPLATES: List[Dict[str, Any]] = [
         {
             "primary_paradigm": "iterative_standard",
@@ -61,6 +68,7 @@ class DivergenceMatrix:
             "naming_convention": "snake_case",
             "error_handling": "early_return",
             "comment_density": "minimalist",
+            "redaction_angle": "focus efficacité et gestion de la mémoire",
         },
         {
             "primary_paradigm": "while_pointer_idiomatic",
@@ -70,6 +78,7 @@ class DivergenceMatrix:
             "naming_convention": "camelCase",
             "error_handling": "single_exit",
             "comment_density": "dense_technical",
+            "redaction_angle": "analyse méthodique et décomposition pas à pas",
         },
         {
             "primary_paradigm": "structured_modular_for",
@@ -79,6 +88,7 @@ class DivergenceMatrix:
             "naming_convention": "descriptive_verbose",
             "error_handling": "nested_guard",
             "comment_density": "docstring_only",
+            "redaction_angle": "analyse système, gestion des erreurs et cas limites",
         },
         {
             "primary_paradigm": "static_modular_helpers",
@@ -88,6 +98,7 @@ class DivergenceMatrix:
             "naming_convention": "short_single_letter",
             "error_handling": "early_return",
             "comment_density": "step_by_step",
+            "redaction_angle": "validation analytique des invariants et complexité",
         },
         {
             "primary_paradigm": "guarded_dowhile_flow",
@@ -97,6 +108,7 @@ class DivergenceMatrix:
             "naming_convention": "snake_case",
             "error_handling": "assert_guard",
             "comment_density": "step_by_step",
+            "redaction_angle": "synthèse pratique, validation par les tests et traces d'exécution",
         },
         {
             "primary_paradigm": "clean_standard_flow",
@@ -106,6 +118,7 @@ class DivergenceMatrix:
             "naming_convention": "camelCase",
             "error_handling": "single_exit",
             "comment_density": "minimalist",
+            "redaction_angle": "conception modulaire, clarté conceptuelle et lisibilité",
         },
     ]
 
