@@ -39,11 +39,12 @@ class StrategyDirective(BaseModel):
             else ""
         )
         instructions = (
-            f"### DIRECTIVE DE DIVERGENCE ANTI-COLLISION (Profil: {self.student_name})\n"
-            f"- **Paradigme principal :** {self.primary_paradigm}\n"
-            f"- **Structure de boucle :** Utiliser exclusivement des structures `{self.loop_style}`.\n"
-            f"- **Accès et mémoire :** Approche `{self.memory_style}` (ex: pointeurs vs indices).\n"
-            f"- **Découpage modulaire :** Style `{self.modularity}` (fonctions statiques auxiliaires ou inline).\n"
+            f"### DIRECTIVE DE RÉDACTION NATURELLE (Profil: {self.student_name})\n"
+            f"- **Approche globale :** {self.primary_paradigm}.\n"
+            f"- **Logique & Syntaxe :** La solution algorithmique et la logique de l'exercice restent identiques et naturelles (la syntaxe standard est acceptée, sans acrobaties artificielles).\n"
+            f"- **Structure de boucle suggérée :** Boucles `{self.loop_style}` idiomatiques.\n"
+            f"- **Accès aux données :** Style standard `{self.memory_style}`.\n"
+            f"- **Découpage modulaire :** Style `{self.modularity}` (inline direct ou petites fonctions statiques auxiliaires).\n"
             f"- **Nommage des variables :** Convention `{self.naming_convention}` pour les identifiants locaux.\n"
             f"- **Gestion des erreurs :** Mode `{self.error_handling}`.\n"
             f"- **Densité des commentaires :** Style `{self.comment_density}`.{forbidden_clause}\n"
@@ -56,10 +57,10 @@ class StrategyDirective(BaseModel):
 class DivergenceMatrix:
     """Manages the allocation of orthogonal strategies across students."""
 
-    # 6 foundational orthogonal archetype templates
+    # 6 foundational strategy templates using standard, natural syntax
     BASE_STRATEGY_TEMPLATES: List[Dict[str, Any]] = [
         {
-            "primary_paradigm": "iterative_indexing",
+            "primary_paradigm": "iterative_standard",
             "loop_style": "for",
             "memory_style": "array_indexing",
             "modularity": "monolithic_inline",
@@ -68,7 +69,7 @@ class DivergenceMatrix:
             "comment_density": "minimalist",
         },
         {
-            "primary_paradigm": "pointer_arithmetic",
+            "primary_paradigm": "while_pointer_idiomatic",
             "loop_style": "while",
             "memory_style": "pointer_arithmetic",
             "modularity": "static_helpers",
@@ -77,9 +78,9 @@ class DivergenceMatrix:
             "comment_density": "dense_technical",
         },
         {
-            "primary_paradigm": "recursive_divide_conquer",
-            "loop_style": "recursion",
-            "memory_style": "buffer_window",
+            "primary_paradigm": "structured_modular_for",
+            "loop_style": "for",
+            "memory_style": "cursor_offset",
             "modularity": "separated_logic",
             "naming_convention": "descriptive_verbose",
             "error_handling": "nested_guard",
@@ -88,37 +89,37 @@ class DivergenceMatrix:
         {
             "primary_paradigm": "static_modular_helpers",
             "loop_style": "while",
-            "memory_style": "cursor_offset",
+            "memory_style": "array_indexing",
             "modularity": "static_helpers",
             "naming_convention": "short_single_letter",
             "error_handling": "early_return",
             "comment_density": "step_by_step",
         },
         {
-            "primary_paradigm": "accumulator_state_machine",
-            "loop_style": "pointer_iteration",
-            "memory_style": "dynamic_stack",
-            "modularity": "utility_macros",
-            "naming_convention": "snake_case",
-            "error_handling": "assert_guard",
-            "comment_density": "dense_technical",
-        },
-        {
-            "primary_paradigm": "dynamic_buffer_window",
+            "primary_paradigm": "guarded_dowhile_flow",
             "loop_style": "do_while",
             "memory_style": "array_indexing",
             "modularity": "monolithic_inline",
+            "naming_convention": "snake_case",
+            "error_handling": "assert_guard",
+            "comment_density": "step_by_step",
+        },
+        {
+            "primary_paradigm": "clean_standard_flow",
+            "loop_style": "for",
+            "memory_style": "pointer_arithmetic",
+            "modularity": "separated_logic",
             "naming_convention": "camelCase",
             "error_handling": "single_exit",
-            "comment_density": "step_by_step",
+            "comment_density": "minimalist",
         },
     ]
 
     # Replacement templates when recursion is forbidden by subject constraints
     ITERATIVE_FALLBACK_TEMPLATE: Dict[str, Any] = {
-        "primary_paradigm": "cursor_offset_accumulator",
-        "loop_style": "do_while",
-        "memory_style": "cursor_offset",
+        "primary_paradigm": "standard_iterative_clean",
+        "loop_style": "for",
+        "memory_style": "array_indexing",
         "modularity": "separated_logic",
         "naming_convention": "descriptive_verbose",
         "error_handling": "nested_guard",
