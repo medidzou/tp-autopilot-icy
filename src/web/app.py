@@ -40,14 +40,14 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 BATCH_STORE: Dict[str, Dict[str, Any]] = {}
 _store_lock = threading.Lock()
 
-# Default cohort of 6 students
+# Default cohort of 6 students (Groupes de Binômes : Mehdi & Aymen, Noah & Taha, Malo & Rayyan)
 DEFAULT_COHORT = [
-    {"name": "Noah", "calibration_answers": {}, "samples": []},
     {"name": "Mehdi", "calibration_answers": {}, "samples": []},
-    {"name": "Malo", "calibration_answers": {}, "samples": []},
     {"name": "Aymen", "calibration_answers": {}, "samples": []},
-    {"name": "Rayyan", "calibration_answers": {}, "samples": []},
+    {"name": "Noah", "calibration_answers": {}, "samples": []},
     {"name": "Taha", "calibration_answers": {}, "samples": []},
+    {"name": "Malo", "calibration_answers": {}, "samples": []},
+    {"name": "Rayyan", "calibration_answers": {}, "samples": []},
 ]
 
 
@@ -80,7 +80,7 @@ app = FastAPI(
 class SubmitBatchRequest(BaseModel):
     subject_text: Optional[str] = Field(default="", description="Texte ou consignes du sujet de TP")
     student_names: Optional[List[str]] = Field(
-        default_factory=lambda: ["Noah", "Mehdi", "Malo", "Aymen", "Rayyan", "Taha"]
+        default_factory=lambda: ["Mehdi", "Aymen", "Noah", "Taha", "Malo", "Rayyan"]
     )
     matiere_id: Optional[str] = Field(default="langage_c")
     mode: Optional[str] = Field(default="solo", description="'solo' ou 'binome'")
@@ -256,7 +256,7 @@ async def submit_tp(
     content_type = request.headers.get("content-type", "")
     skeleton_files: Optional[Dict[str, str]] = None
     subject_text = ""
-    student_names = ["Noah", "Mehdi", "Malo", "Aymen", "Rayyan", "Taha"]
+    student_names = ["Mehdi", "Aymen", "Noah", "Taha", "Malo", "Rayyan"]
     matiere_id = "langage_c"
     mode = "solo"
 

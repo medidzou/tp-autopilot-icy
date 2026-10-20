@@ -221,12 +221,12 @@
     let selectedFile = null;
 
     const defaultStudents = [
-      { name: "Noah", binomeGroup: 1 },
       { name: "Mehdi", binomeGroup: 1 },
-      { name: "Malo", binomeGroup: 2 },
-      { name: "Aymen", binomeGroup: 2 },
+      { name: "Aymen", binomeGroup: 1 },
+      { name: "Noah", binomeGroup: 2 },
+      { name: "Taha", binomeGroup: 2 },
+      { name: "Malo", binomeGroup: 3 },
       { name: "Rayyan", binomeGroup: 3 },
-      { name: "Taha", binomeGroup: 3 },
     ];
 
     const stepBadgeColors = {
@@ -252,7 +252,7 @@
       } else {
         btnBinome.className = "px-3 py-1.5 text-xs font-semibold rounded-lg transition-all bg-blue-600 text-white shadow-sm";
         btnSolo.className = "px-3 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-400 hover:text-white";
-        badge.innerText = "Mode : 3 Binômes (Noah+Mehdi, Malo+Aymen, Rayyan+Taha)";
+        badge.innerText = "Mode : 3 Binômes (Mehdi+Aymen, Noah+Taha, Malo+Rayyan)";
       }
       renderStudentCards();
     }
