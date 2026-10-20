@@ -1,0 +1,22 @@
+{
+  "name": "Emma",
+  "calibration_answers": {
+    "style_code": "camelCase",
+    "gestion_erreurs": "assert() et exceptions strictes",
+    "explication_concept": "Modularité et programmation orientée objet avec encapsulation."
+  },
+  "samples": [
+    "assert(ptr != NULL);\nint currentIdx = computeOffset(size);"
+  ],
+  "verbosity_metrics": {
+    "sample_count": 1,
+    "total_words": 19,
+    "total_sentences": 2,
+    "avg_sentence_length": 9.5,
+    "vocabulary_size": 17,
+    "lexical_diversity": 0.895
+  },
+  "style_preferences": {},
+  "created_at": "2026-10-20T08:02:47.359461+00:00",
+  "updated_at": "2026-10-20T08:02:47.359461+00:00"
+}

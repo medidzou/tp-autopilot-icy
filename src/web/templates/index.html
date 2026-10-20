@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-slate-950 text-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hub Web de Salle de TP - ICy 3A</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              900: '#1e3a8a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .badge-pulse {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+</head>
+<body class="min-h-full flex flex-col font-sans selection:bg-blue-600 selection:text-white">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-900/80 sticky top-0 z-50 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold text-white tracking-wide">Hub Web de Salle de TP</h1>
+          <p class="text-xs text-slate-400">Automate de Génération & Audit Anti-MOSS • 3A ICy</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <!-- Mode Switcher -->
+        <div class="flex items-center bg-slate-800 p-1 rounded-xl border border-slate-700">
+          <button id="btn-mode-solo" class="px-3 py-1.5 text-xs font-semibold rounded-lg transition-all bg-blue-600 text-white shadow-sm" onclick="setMode('solo')">
+            Mode Solo (6)
+          </button>
+          <button id="btn-mode-binome" class="px-3 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-400 hover:text-white" onclick="setMode('binome')">
+            Mode Binômes (3×2)
+          </button>
+        </div>
+
+        <!-- Master Download Shortcut -->
+        <button id="btn-master-download-top" disabled class="opacity-50 cursor-not-allowed inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-emerald-600 hover:bg-emerald-500 text-white transition-all shadow-lg shadow-emerald-900/30" onclick="downloadMasterBundle()">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+          </svg>
+          <span>Bundle .ZIP</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+    <!-- Configuration & Submission Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- Left Column: Subject & Dropzone -->
+      <div class="lg:col-span-2 space-y-6">
+        <div class="glass-panel p-6 rounded-2xl shadow-xl">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-base font-semibold text-white flex items-center space-x-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+              <span>1. Sujet de TP & Contraintes</span>
+            </h2>
+
+            <!-- Matiere Selector -->
+            <div class="flex items-center space-x-2">
+              <label for="matiere-select" class="text-xs text-slate-400">Matière :</label>
+              <select id="matiere-select" class="bg-slate-800 text-xs text-slate-200 border border-slate-700 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="langage_c">Langage C (Pointeurs & Structures)</option>
+                <option value="prog_systeme">Programmation Système (POSIX Threads)</option>
+                <option value="java_poo">Java & POO (Design Patterns)</option>
+                <option value="reseaux">Réseaux & Sockets (TCP/UDP)</option>
+                <option value="python_data">Python & Analyse de Données</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Subject Textarea -->
+          <div class="space-y-4">
+            <div>
+              <label for="subject-text" class="block text-xs font-medium text-slate-300 mb-1">
+                Description ou consignes du sujet (copier-coller) :
+              </label>
+              <textarea id="subject-text" rows="4" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="# TP 3 : Table de hachage en C&#10;Implémenter une table de hachage avec résolution par chaînage...&#10;Prototypes : unsigned int hash_string(const char *str);"></textarea>
+            </div>
+
+            <!-- Drag & Drop Dropzone -->
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">
+                Squelette de code ou fichier de consigne (Dropzone) :
+              </label>
+              <div id="dropzone" class="border-2 border-dashed border-slate-700 hover:border-blue-500 rounded-xl p-5 text-center transition-all bg-slate-900/50 cursor-pointer flex flex-col items-center justify-center" onclick="document.getElementById('skeleton-file-input').click()">
+                <svg class="w-8 h-8 text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                </svg>
+                <p id="dropzone-label" class="text-xs text-slate-300 font-medium">Glissez-déposez une archive squelette (.zip, .c, .h, .txt) ou cliquez pour parcourir</p>
+                <p class="text-[10px] text-slate-500 mt-1">Extraction automatique des invariants et signatures de fonctions</p>
+                <input type="file" id="skeleton-file-input" class="hidden" onchange="handleFileSelect(event)">
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button id="btn-submit" class="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center space-x-2 cursor-pointer" onclick="submitBatch()">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+              </svg>
+              <span>Lancer la Résolution du Lot (Pipeline Parallèle)</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Status & Audit Overview -->
+      <div class="space-y-6">
+        <div class="glass-panel p-6 rounded-2xl shadow-xl flex flex-col justify-between h-full">
+          <div>
+            <h2 class="text-base font-semibold text-white flex items-center space-x-2 mb-4">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              <span>Progression du Lot</span>
+            </h2>
+
+            <!-- Master Progress -->
+            <div class="space-y-2 mb-6">
+              <div class="flex justify-between text-xs font-medium">
+                <span id="batch-step-text" class="text-slate-300">En attente de soumission</span>
+                <span id="batch-progress-pct" class="text-blue-400">0%</span>
+              </div>
+              <div class="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden border border-slate-700/50">
+                <div id="batch-progress-bar" class="bg-gradient-to-r from-blue-500 to-emerald-500 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <!-- Audit Metrics Summary Box -->
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 space-y-3">
+              <h3 class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Garanties Anti-MOSS</h3>
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <div class="bg-slate-800/60 p-2.5 rounded-lg border border-slate-700/50">
+                  <span class="text-slate-400 block text-[10px]">Similarité AST Max</span>
+                  <span id="metric-max-sim" class="text-emerald-400 font-bold text-sm">-- %</span>
+                </div>
+                <div class="bg-slate-800/60 p-2.5 rounded-lg border border-slate-700/50">
+                  <span class="text-slate-400 block text-[10px]">Invariants Squelette</span>
+                  <span id="metric-invariants" class="text-emerald-400 font-bold text-sm">100% OK</span>
+                </div>
+              </div>
+              <p class="text-[11px] text-slate-400 leading-relaxed">
+                Le pipeline dérive des stratégies algorithmiques orthogonales pour garantir un taux de collision AST strictement inférieur à 12%.
+              </p>
+            </div>
+          </div>
+
+          <!-- Master Bundle Download Button -->
+          <div class="pt-6">
+            <button id="btn-master-download" disabled class="w-full py-3 px-4 bg-slate-800 text-slate-500 font-semibold rounded-xl border border-slate-700 transition-all flex items-center justify-center space-x-2 cursor-not-allowed" onclick="downloadMasterBundle()">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              <span id="btn-master-label">Télécharger le Bundle Complet (.ZIP)</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Student Cards Section -->
+    <div class="space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-base font-semibold text-white flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
+          <span>2. Suivi Individuel de la Cohorte (6 Étudiants)</span>
+        </h2>
+        <span id="cohort-mode-badge" class="text-xs bg-slate-800 text-slate-400 px-2.5 py-1 rounded-full border border-slate-700">
+          Mode : 6 Copies Individuelles
+        </span>
+      </div>
+
+      <!-- 6 Student Cards Grid -->
+      <div id="students-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Generated dynamically via JS -->
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 bg-slate-950 py-4 text-center text-xs text-slate-500">
+    Automate de TP Salle de Cours • 3A Informatique & Cybersécurité (ICy) • Conçu pour une exécution locale robuste
+  </footer>
+
+  <!-- Frontend Logic -->
+  <script>
+    let currentMode = 'solo';
+    let currentBatchId = null;
+    let pollInterval = null;
+    let selectedFile = null;
+
+    const defaultStudents = [
+      { name: "Lucas", style: "snake_case • Modulaire • Commentaires", binomeGroup: 1 },
+      { name: "Emma", style: "camelCase • Compact • Assertions", binomeGroup: 1 },
+      { name: "Thomas", style: "Architecture systèmes • pthread • Verbeux", binomeGroup: 2 },
+      { name: "Chloé", style: "camelCase • Défensif • Validation rigoureuse", binomeGroup: 2 },
+      { name: "Maxime", style: "K&R • Direct • Optimisation pointeurs", binomeGroup: 3 },
+      { name: "Léa", style: "Clean code • Typage strict • Précision", binomeGroup: 3 },
+    ];
+
+    const stepBadgeColors = {
+      "En attente": "bg-slate-800 text-slate-400 border-slate-700",
+      "Analyse noyau": "bg-blue-900/60 text-blue-300 border-blue-700 badge-pulse",
+      "Dérivation style": "bg-purple-900/60 text-purple-300 border-purple-700 badge-pulse",
+      "Compilation gcc": "bg-amber-900/60 text-amber-300 border-amber-700 badge-pulse",
+      "Audit anti-MOSS": "bg-indigo-900/60 text-indigo-300 border-indigo-700 badge-pulse",
+      "Prêt": "bg-emerald-900/60 text-emerald-300 border-emerald-600 font-semibold",
+      "Erreur": "bg-rose-900/60 text-rose-300 border-rose-700",
+    };
+
+    function setMode(mode) {
+      currentMode = mode;
+      const btnSolo = document.getElementById('btn-mode-solo');
+      const btnBinome = document.getElementById('btn-mode-binome');
+      const badge = document.getElementById('cohort-mode-badge');
+
+      if (mode === 'solo') {
+        btnSolo.className = "px-3 py-1.5 text-xs font-semibold rounded-lg transition-all bg-blue-600 text-white shadow-sm";
+        btnBinome.className = "px-3 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-400 hover:text-white";
+        badge.innerText = "Mode : 6 Copies Individuelles";
+      } else {
+        btnBinome.className = "px-3 py-1.5 text-xs font-semibold rounded-lg transition-all bg-blue-600 text-white shadow-sm";
+        btnSolo.className = "px-3 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-400 hover:text-white";
+        badge.innerText = "Mode : 3 Binômes (Lucas+Emma, Thomas+Chloé, Maxime+Léa)";
+      }
+      renderStudentCards();
+    }
+
+    function renderStudentCards(studentStatuses = {}) {
+      const container = document.getElementById('students-grid');
+      container.innerHTML = '';
+
+      defaultStudents.forEach(student => {
+        const statusData = studentStatuses[student.name] || {};
+        const step = statusData.status || "En attente";
+        const badgeClass = stepBadgeColors[step] || stepBadgeColors["En attente"];
+        const isReady = step === "Prêt";
+        const isCompFailed = statusData.compilation_success === false;
+
+        const card = document.createElement('div');
+        card.className = "glass-panel rounded-xl p-4 flex flex-col justify-between border transition-all hover:border-slate-700";
+
+        let binomeLabel = "";
+        if (currentMode === 'binome') {
+          binomeLabel = `<span class="text-[10px] bg-slate-800 text-indigo-300 px-2 py-0.5 rounded border border-slate-700">Binôme ${student.binomeGroup}</span>`;
+        }
+
+        card.innerHTML = `
+          <div>
+            <div class="flex items-start justify-between mb-2">
+              <div>
+                <h3 class="text-sm font-bold text-white flex items-center space-x-2">
+                  <span>${student.name}</span>
+                  ${binomeLabel}
+                </h3>
+                <p class="text-[11px] text-slate-400 mt-0.5">${student.style}</p>
+              </div>
+              <span id="badge-${student.name}" class="text-[11px] px-2.5 py-1 rounded-full border ${badgeClass}">
+                ${step}
+              </span>
+            </div>
+            ${statusData.burstiness_score ? `
+              <div class="mt-2 text-[10px] text-slate-400">
+                Score Burstiness : <span class="text-blue-400 font-mono">${statusData.burstiness_score.toFixed(2)}</span>
+              </div>
+            ` : ''}
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
+            <span class="text-[10px] text-slate-500">${isReady ? 'Archive .ZIP générée' : 'En attente du pipeline'}</span>
+            <button 
+              id="dl-btn-${student.name}"
+              class="px-2.5 py-1 text-xs rounded-lg border transition-all flex items-center space-x-1 ${isReady ? 'bg-blue-600 hover:bg-blue-500 text-white border-blue-500 cursor-pointer shadow-sm' : 'bg-slate-800/50 text-slate-600 border-slate-700/50 cursor-not-allowed'}"
+              ${isReady ? '' : 'disabled'}
+              onclick="downloadStudentZip('${student.name}')"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+              </svg>
+              <span>Télécharger</span>
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function handleFileSelect(event) {
+      const file = event.target.files[0];
+      if (file) {
+        selectedFile = file;
+        document.getElementById('dropzone-label').innerHTML = `Fichier sélectionné : <strong class="text-blue-400">${file.name}</strong> (${(file.size / 1024).toFixed(1)} Ko)`;
+      }
+    }
+
+    // Drag and drop event listeners
+    const dropzone = document.getElementById('dropzone');
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.classList.add('border-blue-500', 'bg-blue-900/10');
+    });
+    dropzone.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('border-blue-500', 'bg-blue-900/10');
+    });
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('border-blue-500', 'bg-blue-900/10');
+      if (e.dataTransfer.files.length > 0) {
+        selectedFile = e.dataTransfer.files[0];
+        document.getElementById('dropzone-label').innerHTML = `Fichier sélectionné : <strong class="text-blue-400">${selectedFile.name}</strong> (${(selectedFile.size / 1024).toFixed(1)} Ko)`;
+      }
+    });
+
+    async function submitBatch() {
+      const subjectText = document.getElementById('subject-text').value.trim();
+      const matiereId = document.getElementById('matiere-select').value;
+      const studentNames = defaultStudents.map(s => s.name);
+
+      if (!subjectText && !selectedFile) {
+        alert("Veuillez saisir un texte de sujet ou déposer un fichier squelette.");
+        return;
+      }
+
+      const submitBtn = document.getElementById('btn-submit');
+      submitBtn.disabled = true;
+      submitBtn.classList.add('opacity-75');
+
+      try {
+        let response;
+        if (selectedFile) {
+          const formData = new FormData();
+          formData.append('subject_text', subjectText);
+          formData.append('student_names', studentNames.join(','));
+          formData.append('matiere_id', matiereId);
+          formData.append('mode', currentMode);
+          formData.append('skeleton_file', selectedFile);
+
+          response = await fetch('/api/tp/submit', {
+            method: 'POST',
+            body: formData,
+          });
+        } else {
+          response = await fetch('/api/tp/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              subject_text: subjectText,
+              student_names: studentNames,
+              matiere_id: matiereId,
+              mode: currentMode,
+            }),
+          });
+        }
+
+        const data = await response.json();
+        if (response.ok && data.batch_id) {
+          currentBatchId = data.batch_id;
+          startPolling(currentBatchId);
+        } else {
+          alert("Erreur lors de la soumission : " + (data.detail || "Échec inconnu"));
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('opacity-75');
+        }
+      } catch (err) {
+        alert("Erreur réseau : " + err.message);
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-75');
+      }
+    }
+
+    function startPolling(batchId) {
+      if (pollInterval) clearInterval(pollInterval);
+      pollInterval = setInterval(() => checkStatus(batchId), 1000);
+      checkStatus(batchId);
+    }
+
+    async function checkStatus(batchId) {
+      try {
+        const res = await fetch(`/api/tp/status/${batchId}`);
+        if (!res.ok) return;
+
+        const data = await res.json();
+        const progress = data.progress || 0;
+        const status = data.status;
+
+        // Update progress bar
+        document.getElementById('batch-progress-pct').innerText = `${progress}%`;
+        document.getElementById('batch-progress-bar').style.width = `${progress}%`;
+
+        // Update step text
+        const stepLabels = {
+          "queued": "En file d'attente...",
+          "processing": "Résolution & Dérivation en cours...",
+          "completed": "Lot terminé & Livrables prêts !",
+          "failed": "Erreur lors de la génération",
+        };
+        document.getElementById('batch-step-text').innerText = stepLabels[status] || status;
+
+        // Update metrics if available
+        if (data.similarity_matrix && data.similarity_matrix.max_similarity !== undefined) {
+          const maxSimPct = (data.similarity_matrix.max_similarity * 100).toFixed(1);
+          document.getElementById('metric-max-sim').innerText = `${maxSimPct}%`;
+        }
+
+        // Update student cards
+        if (data.students) {
+          renderStudentCards(data.students);
+        }
+
+        // Handle completion
+        if (status === 'completed') {
+          clearInterval(pollInterval);
+          enableMasterDownloads();
+          const submitBtn = document.getElementById('btn-submit');
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('opacity-75');
+        } else if (status === 'failed') {
+          clearInterval(pollInterval);
+          const submitBtn = document.getElementById('btn-submit');
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('opacity-75');
+        }
+      } catch (e) {
+        console.error("Polling error:", e);
+      }
+    }
+
+    function enableMasterDownloads() {
+      const topBtn = document.getElementById('btn-master-download-top');
+      topBtn.disabled = false;
+      topBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+      const mainBtn = document.getElementById('btn-master-download');
+      mainBtn.disabled = false;
+      mainBtn.className = "w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl shadow-lg shadow-emerald-900/30 transition-all flex items-center justify-center space-x-2 cursor-pointer";
+    }
+
+    function downloadMasterBundle() {
+      if (!currentBatchId) return;
+      window.location.href = `/api/tp/download/${currentBatchId}`;
+    }
+
+    function downloadStudentZip(studentName) {
+      if (!currentBatchId) return;
+      window.location.href = `/api/tp/download/${currentBatchId}/${studentName}`;
+    }
+
+    // Initialize UI on load
+    document.addEventListener('DOMContentLoaded', () => {
+      renderStudentCards();
+    });
+  </script>
+</body>
+</html>

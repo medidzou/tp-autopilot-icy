@@ -1,0 +1,22 @@
+{
+  "name": "Léa",
+  "calibration_answers": {
+    "style_code": "clean_code",
+    "gestion_erreurs": "assertions et typage fort",
+    "explication_concept": "Conception logicielle propre, typage fort et modularité des interfaces."
+  },
+  "samples": [
+    "size_t elementCount = countElements(list);\nreturn elementCount > 0;"
+  ],
+  "verbosity_metrics": {
+    "sample_count": 1,
+    "total_words": 21,
+    "total_sentences": 1,
+    "avg_sentence_length": 21.0,
+    "vocabulary_size": 17,
+    "lexical_diversity": 0.81
+  },
+  "style_preferences": {},
+  "created_at": "2026-10-20T08:02:47.365890+00:00",
+  "updated_at": "2026-10-20T08:02:47.365890+00:00"
+}
