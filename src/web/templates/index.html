@@ -221,12 +221,12 @@
     let selectedFile = null;
 
     const defaultStudents = [
-      { name: "Lucas", style: "snake_case • Modulaire • Commentaires", binomeGroup: 1 },
-      { name: "Emma", style: "camelCase • Compact • Assertions", binomeGroup: 1 },
-      { name: "Thomas", style: "Architecture systèmes • pthread • Verbeux", binomeGroup: 2 },
-      { name: "Chloé", style: "camelCase • Défensif • Validation rigoureuse", binomeGroup: 2 },
-      { name: "Maxime", style: "K&R • Direct • Optimisation pointeurs", binomeGroup: 3 },
-      { name: "Léa", style: "Clean code • Typage strict • Précision", binomeGroup: 3 },
+      { name: "Noah", style: "snake_case • Modulaire • Pointers & malloc", binomeGroup: 1 },
+      { name: "Mehdi", style: "camelCase • Compact • Assertions", binomeGroup: 1 },
+      { name: "Malo", style: "Architecture systèmes • pthread • Verbeux", binomeGroup: 2 },
+      { name: "Aymen", style: "camelCase • Défensif • Validation rigoureuse", binomeGroup: 2 },
+      { name: "Rayyan", style: "K&R • Direct • Optimisation", binomeGroup: 3 },
+      { name: "Taha", style: "Clean code • Typage strict • Précision", binomeGroup: 3 },
     ];
 
     const stepBadgeColors = {
@@ -252,7 +252,7 @@
       } else {
         btnBinome.className = "px-3 py-1.5 text-xs font-semibold rounded-lg transition-all bg-blue-600 text-white shadow-sm";
         btnSolo.className = "px-3 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-400 hover:text-white";
-        badge.innerText = "Mode : 3 Binômes (Lucas+Emma, Thomas+Chloé, Maxime+Léa)";
+        badge.innerText = "Mode : 3 Binômes (Noah+Mehdi, Malo+Aymen, Rayyan+Taha)";
       }
       renderStudentCards();
     }

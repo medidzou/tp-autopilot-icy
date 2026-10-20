@@ -43,7 +43,7 @@ _store_lock = threading.Lock()
 # Default cohort of 6 students if profiles directory is unpopulated
 DEFAULT_COHORT = [
     {
-        "name": "Lucas",
+        "name": "Noah",
         "calibration_answers": {
             "style_code": "snake_case",
             "gestion_erreurs": "valeurs de retour et perror",
@@ -52,7 +52,7 @@ DEFAULT_COHORT = [
         "samples": ["int res = process_buffer(buf);\nif (res < 0) { perror(\"err\"); return -1; }"],
     },
     {
-        "name": "Emma",
+        "name": "Mehdi",
         "calibration_answers": {
             "style_code": "camelCase",
             "gestion_erreurs": "assert() et exceptions strictes",
@@ -61,7 +61,7 @@ DEFAULT_COHORT = [
         "samples": ["assert(ptr != NULL);\nint currentIdx = computeOffset(size);"],
     },
     {
-        "name": "Thomas",
+        "name": "Malo",
         "calibration_answers": {
             "style_code": "snake_case",
             "gestion_erreurs": "propagation des codes d'erreur",
@@ -70,7 +70,7 @@ DEFAULT_COHORT = [
         "samples": ["pthread_mutex_lock(&lock);\nshared_counter++;\npthread_mutex_unlock(&lock);"],
     },
     {
-        "name": "Chloé",
+        "name": "Aymen",
         "calibration_answers": {
             "style_code": "camelCase",
             "gestion_erreurs": "contrôles défensifs stricts",
@@ -79,7 +79,7 @@ DEFAULT_COHORT = [
         "samples": ["if (bufferSize <= 0) return INVALID_ARGUMENT;\nmemset(buffer, 0, bufferSize);"],
     },
     {
-        "name": "Maxime",
+        "name": "Rayyan",
         "calibration_answers": {
             "style_code": "K&R",
             "gestion_erreurs": "errno et retours négatifs",
@@ -88,7 +88,7 @@ DEFAULT_COHORT = [
         "samples": ["char *p = str;\nwhile (*p) { hash = (hash << 5) + *p++; }"],
     },
     {
-        "name": "Léa",
+        "name": "Taha",
         "calibration_answers": {
             "style_code": "clean_code",
             "gestion_erreurs": "assertions et typage fort",
@@ -128,7 +128,7 @@ app = FastAPI(
 class SubmitBatchRequest(BaseModel):
     subject_text: Optional[str] = Field(default="", description="Texte ou consignes du sujet de TP")
     student_names: Optional[List[str]] = Field(
-        default_factory=lambda: ["Lucas", "Emma", "Thomas", "Chloé", "Maxime", "Léa"]
+        default_factory=lambda: ["Noah", "Mehdi", "Malo", "Aymen", "Rayyan", "Taha"]
     )
     matiere_id: Optional[str] = Field(default="langage_c")
     mode: Optional[str] = Field(default="solo", description="'solo' ou 'binome'")
@@ -304,7 +304,7 @@ async def submit_tp(
     content_type = request.headers.get("content-type", "")
     skeleton_files: Optional[Dict[str, str]] = None
     subject_text = ""
-    student_names = ["Lucas", "Emma", "Thomas", "Chloé", "Maxime", "Léa"]
+    student_names = ["Noah", "Mehdi", "Malo", "Aymen", "Rayyan", "Taha"]
     matiere_id = "langage_c"
     mode = "solo"
 

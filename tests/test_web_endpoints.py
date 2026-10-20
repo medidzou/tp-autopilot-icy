@@ -199,7 +199,7 @@ def test_get_profiles(client: TestClient):
     assert len(profiles) >= 6
 
     names = [p.get("name") if isinstance(p, dict) else p for p in profiles]
-    for expected_name in ["Lucas", "Emma", "Thomas", "Chloé", "Maxime", "Léa"]:
+    for expected_name in ["Noah", "Mehdi", "Malo", "Aymen", "Rayyan", "Taha"]:
         assert expected_name in names
 
 
